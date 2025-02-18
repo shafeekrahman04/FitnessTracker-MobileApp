@@ -16,7 +16,7 @@ export default function SplashScreen({navigation}) {
   const isLogIn = async () => {
     try {
       setIsloader(true);
-      navigation.replace('Login');
+      navigation.replace('Onboarding');
       setIsloader(false);
     } catch (e) {
       setIsloader(false);
@@ -38,7 +38,7 @@ export default function SplashScreen({navigation}) {
     <View style={styles.body}>
       <View style={styles.image_container}>
         <Image
-          source={require('../../assets/logo/sos.png')}
+          source={require('../assets/logo.png')}
           style={styles.image}
         />
       </View>
