@@ -12,6 +12,9 @@ import OnboardingScreen from '../screens/onBoarding/OnboardingScreen';
 import GenderSelectionScreen from '../screens/onBoarding/GenderSelectionScreen';
 import GoalSelectionScreen from '../screens/onBoarding/GoalSelectionScreen';
 import FitnessLevelScreen from '../screens/onBoarding/FitnessLevelScreen';
+import FocusPartScreen from '../screens/onBoarding/FocusPartScreen';
+import UserDetailsScreen from '../screens/onBoarding/UserDetailsScreen';
+import GeneratePlanScreen from '../screens/onBoarding/GeneratePlanScreen';
 
 const Stack = createStackNavigator();
 
@@ -93,6 +96,27 @@ export default function StackNavigation() {
         <Stack.Screen
           name="FitnessLevel"
           component={FitnessLevelScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="FocusPart"
+          component={FocusPartScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UserDetails"
+          component={UserDetailsScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="GeneratePlan"
+          component={GeneratePlanScreen}
           options={{
             headerShown: false,
           }}
