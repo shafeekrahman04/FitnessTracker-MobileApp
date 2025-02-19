@@ -76,7 +76,7 @@ export default function LoginScreen({navigation}) {
     <>
       <View style={styles.body}>
         <Image
-          source={require('../../assets/logo/sos.png')}
+          source={require('../assets/logo.png')}
           style={styles.image}
         />
 

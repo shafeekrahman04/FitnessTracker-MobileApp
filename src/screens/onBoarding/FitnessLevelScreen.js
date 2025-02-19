@@ -26,7 +26,7 @@ const FitnessLevelScreen = ({navigation}) => {
       Alert.alert('Input Required', 'Please select a level before proceeding.');
       return;
     }
-    navigation.navigate('GoalSelection');
+    navigation.navigate('FocusPart');
   };
 
   return (

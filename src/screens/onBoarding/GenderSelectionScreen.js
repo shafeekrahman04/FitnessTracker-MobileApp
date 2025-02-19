@@ -10,7 +10,6 @@ const GenderSelectionScreen = ({navigation}) => {
   };
 
   const handleNext = () => {
-    console.log(selectedGender);
     if (!selectedGender) {
       Alert.alert('Input Required', 'Please select gender before proceeding.');
       return;
