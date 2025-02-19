@@ -1,51 +1,83 @@
 import {StyleSheet} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Profile from '../screens/Profile';
+import PlanScreen from '../screens/bottom_page/PlanScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Home from '../screens/Home';
+import WorkoutScreen from '../screens/bottom_page/WorkoutScreen';
+import DietScreen from '../screens/bottom_page/DietScreen';
+import { ProfileScreen } from '../screens/ProfileScreen ';
 
 export default function BottomTab() {
   const TabNav = createBottomTabNavigator();
   return (
     <TabNav.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#E4132C',
+        tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'grey',
         tabBarLabelStyle: {
           fontWeight: '600',
-          fontSize: 16, // Increased font size
+          fontSize: 14,
         },
         tabBarStyle: {
-          height: 70, // Increased height of the bottom tab bar
+          backgroundColor: '#000000',
+          height: 70,
           paddingBottom: 10,
           paddingTop: 10,
+          borderTopWidth: 0,
         },
       }}>
       <TabNav.Screen
-        name="Home"
-        component={Home}
+        name="Plan"
+        component={PlanScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
             <Ionicons
-              name={focused ? 'home' : 'home-outline'}
-              size={21} // Increased icon size
-              color={focused ? '#E4132C' : 'grey'}
+              name={focused ? 'layers' : 'layers-outline'}
+              size={20}
+              color={focused ? 'white' : 'grey'}
             />
           ),
         }}
       />
       <TabNav.Screen
-        name="Profile"
-        component={Profile}
+        name="Workout"
+        component={WorkoutScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name={focused ? 'barbell' : 'barbell-outline'}
+              size={20}
+              color={focused ? 'white' : 'grey'}
+            />
+          ),
+        }}
+      />
+      <TabNav.Screen
+        name="Diet"
+        component={DietScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name={focused ? 'calendar' : 'calendar-outline'}
+              size={20}
+              color={focused ? 'white' : 'grey'}
+            />
+          ),
+        }}
+      />
+      <TabNav.Screen
+        name="Me"
+        component={ProfileScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
             <Ionicons
               name={focused ? 'person' : 'person-outline'}
-              size={21} // Increased icon size
-              color={focused ? '#E4132C' : 'grey'}
+              size={20}
+              color={focused ? 'white' : 'grey'}
             />
           ),
         }}
