@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const WorkoutScreen = () => {
+const WorkoutScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Classic');
 
   const workouts = [
@@ -49,7 +49,7 @@ const WorkoutScreen = () => {
           data={workouts}
           keyExtractor={item => item.id}
           renderItem={({item}) => (
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity style={styles.card} onPress={() => {navigation.navigate('ExerciseScreen');}}>
               <ImageBackground
                 source={item.image}
                 style={styles.image}

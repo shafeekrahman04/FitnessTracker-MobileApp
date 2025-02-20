@@ -69,7 +69,7 @@ export default function LoginScreen({navigation}) {
   }
 
   const goToSignUp = () => {
-    navigation.navigate('SignUp');
+    navigation.navigate('NameInput');
   };
 
   return (
@@ -88,7 +88,8 @@ export default function LoginScreen({navigation}) {
           <Text style={styles.label}>Username</Text>
           <TextInput
             style={styles.input}
-            placeholder="alex"
+            placeholder="username"
+            placeholderTextColor="#fff" 
             value={username}
             onChangeText={v => {
               setUsername(v);
@@ -100,6 +101,7 @@ export default function LoginScreen({navigation}) {
               style={styles.input}
               secureTextEntry={showPassword}
               placeholder="Password"
+              placeholderTextColor="#fff" 
               value={password}
               onChangeText={v => {
                 setPassword(v);
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: '2%',
-    backgroundColor: Colors.white,
+    backgroundColor: '#121212',
   },
   image_container: {
     width: '100%',
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   heading_font: {
-    color: Colors.red,
+    color: '#fff',
     fontSize: 25,
     fontWeight: 'bold',
   },
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#E4132C',
+    color: '#fff',
     textAlign: 'center',
   },
   welcometxt: {
@@ -200,16 +202,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 5,
-    color: '#333',
+    color: '#fff',
   },
   input: {
     width: '100%',
     height: 50,
     borderWidth: 1,
-    borderColor: '#E4132C',
+    borderColor: '#f5736c',
     borderRadius: 10,
     paddingHorizontal: 15,
     marginBottom: 10,
+    color: '#fff', 
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -223,10 +226,10 @@ const styles = StyleSheet.create({
   forgotPassword: {
     textAlign: 'right',
     fontSize: 14,
-    color: '#E4132C',
+    color: '#fff',
   },
   loginButton: {
-    backgroundColor: '#E4132C',
+    backgroundColor: '#f5736c',
     width: '100%',
     padding: 15,
     borderRadius: 10,
@@ -244,14 +247,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   line: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
     height: 1,
     flex: 1,
   },
   orText: {
     marginHorizontal: 10,
     fontSize: 16,
-    color: '#333',
+    color: '#fff',
   },
   signupContainer: {
     flexDirection: 'row',
@@ -260,11 +263,11 @@ const styles = StyleSheet.create({
   },
   signupText: {
     fontSize: 16,
-    color: '#333',
+    color: '#fff',
   },
   signupLink: {
     fontSize: 16,
-    color: '#E4132C',
+    color: '#f5736c',
     fontWeight: 'bold',
   },
 });

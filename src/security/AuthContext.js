@@ -55,14 +55,9 @@ export default function AuthContextProvider({children}) {
     }
   }
 
-  async function signup(name,username, contactNumber, password) {
+  async function signup(data) {
     try {
-      const response = await userRegister({
-        name,
-        username,
-        contactNumber,
-        password,
-      });      
+      const response = await userRegister(data);    
       if (response.data.success) {
         return true;
       } else {

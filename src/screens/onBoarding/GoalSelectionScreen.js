@@ -1,22 +1,37 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome6';
+import AlertMessage from '../../shared/AlertMessage';
+import {alertMessageType} from '../../utilities/enum/Enum';
 
-const GoalSelectionScreen = ({navigation}) => {
+const goals = [
+  {id: 'lose_weight', label: 'LOSE WEIGHT', icon: 'weight-scale'},
+  {id: 'build_muscle', label: 'BUILD MUSCLE', icon: 'dumbbell'},
+  {id: 'keep_fit', label: 'KEEP FIT', icon: 'heart-pulse'},
+];
+
+const GoalSelectionScreen = ({navigation, route}) => {
+  const {userData} = route.params || {};
+
   const [selectedGoal, setSelectedGoal] = useState(null);
+  const [alertMessage, setAlertMessage] = useState({message: '',timestamp: Date.now(),});
+  const [alertType, setAlertType] = useState('');
 
-  const goals = [
-    {id: 'lose_weight', label: 'LOSE WEIGHT', icon: 'weight-scale'},
-    {id: 'build_muscle', label: 'BUILD MUSCLE', icon: 'dumbbell'},
-    {id: 'keep_fit', label: 'KEEP FIT', icon: 'heart-pulse'},
-  ];
+  const alertMessagePopUp = (message, messageType) => {
+    setAlertMessage({message: message, timestamp: new Date()});
+    setAlertType(messageType);
+  };
 
   const handleNext = () => {
     if (!selectedGoal) {
-      Alert.alert('Input Required', 'Please select a goal before proceeding.');
+      alertMessagePopUp(
+        'Please select a goal before proceeding.',
+        alertMessageType.WARNING.code,
+      );
       return;
     }
-    navigation.navigate('FitnessLevel');
+    const updatedUserData = { ...userData, goal: selectedGoal };
+    navigation.navigate('FitnessLevel', { userData: updatedUserData });
   };
 
   return (
@@ -74,6 +89,7 @@ const GoalSelectionScreen = ({navigation}) => {
           <Text style={styles.nextButtonText}>NEXT</Text>
         </TouchableOpacity>
       </View>
+      <AlertMessage message={alertMessage} messageType={alertType} />
     </View>
   );
 };

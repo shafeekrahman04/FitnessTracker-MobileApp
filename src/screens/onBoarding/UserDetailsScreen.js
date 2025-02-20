@@ -1,31 +1,56 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   TextInput,
   StyleSheet,
-  Alert,
+  Modal,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome6';
+import AlertMessage from '../../shared/AlertMessage';
+import {alertMessageType} from '../../utilities/enum/Enum';
+import {useAuth} from '../../security/AuthContext';
+import Loader from '../../shared/Loader';
 
 const fields = [
-  { label: 'Date of Birth', key: 'dob' },
-  { label: 'Current weight', key: 'currentWeight' },
-  { label: 'Target weight', key: 'targetWeight' },
-  { label: 'Height', key: 'height' },
+  {label: 'Username', key: 'username'},
+  {label: 'Password', key: 'password'},
+  {label: 'Date of Birth', key: 'dob'},
+  {label: 'Current weight', key: 'currentWeight'},
+  {label: 'Target weight', key: 'targetWeight'},
+  {label: 'Height', key: 'height'},
 ];
 
-const UserDetailsScreen = ({ navigation }) => {
-  const [userData, setUserData] = useState({
-    dob: '1990-01-01',
-    currentWeight: '176.4 lbs',
-    targetWeight: '165.3 lbs',
-    height: `5'10"`,
-  });
+const initialData = {
+  username: '',
+  password: '',
+  dob: '1990-01-01',
+  currentWeight: '176.4 lbs',
+  targetWeight: '165.3 lbs',
+  height: `5'10"`,
+};
 
-  // Refs for TextInput fields
+const UserDetailsScreen = ({navigation, route}) => {
+  const {userData} = route.params || {};
+  const authContext = useAuth();
+
+  const [loader, setLoader] = useState(false);
+  const [userBioData, setUserBioData] = useState({...initialData, ...userData});
+  const [alertMessage, setAlertMessage] = useState({
+    message: '',
+    timestamp: Date.now(),
+  });
+  const [alertType, setAlertType] = useState('');
+
+  const alertMessagePopUp = (message, messageType) => {
+    setAlertMessage({message: message, timestamp: new Date()});
+    setAlertType(messageType);
+  };
+
   const inputRefs = {
+    username: useRef(null),
+    password: useRef(null),
     dob: useRef(null),
     currentWeight: useRef(null),
     targetWeight: useRef(null),
@@ -33,14 +58,61 @@ const UserDetailsScreen = ({ navigation }) => {
   };
 
   const handleInputChange = (field, value) => {
-    setUserData(prevState => ({
+    setUserBioData(prevState => ({
       ...prevState,
       [field]: value,
     }));
   };
 
-  const handleNext = () => {
-    navigation.navigate('GeneratePlan', { userData });
+  const signUpValidation = () => {
+    let isValid = true;
+    if (userBioData.username.length == 0) {
+      alertMessagePopUp('Please enter username', alertMessageType.WARNING.code);
+      return false;
+    }
+    if (userBioData.password.length == 0) {
+      alertMessagePopUp('Please enter password', alertMessageType.WARNING.code);
+      return false;
+    }
+    if (userBioData.dob.length == 0) {
+      alertMessagePopUp('Please enter DOB', alertMessageType.WARNING.code);
+      return false;
+    }
+    if (userBioData.currentWeight.length == 0) {
+      alertMessagePopUp(
+        'Please enter current weight',
+        alertMessageType.WARNING.code,
+      );
+      return false;
+    }
+    if (userBioData.targetWeight.length == 0) {
+      alertMessagePopUp(
+        'Please enter target weight',
+        alertMessageType.WARNING.code,
+      );
+      return false;
+    }
+    if (userBioData.height.length == 0) {
+      alertMessagePopUp('Please enter height', alertMessageType.WARNING.code);
+      return false;
+    }
+    return isValid;
+  };
+
+  const handleSubmit = async () => {
+    if (signUpValidation()) {
+      setLoader(true);
+      const success = await authContext.signup(userBioData);
+      setLoader(false);
+      if (success) {
+        alertMessagePopUp('Signup successful', alertMessageType.SUCCESS.code);
+        setTimeout(() => {
+          navigation.navigate('Login');
+        }, 500);
+      } else {
+        alertMessagePopUp(authContext.error, alertMessageType.DANGER.code);
+      }
+    }
   };
 
   return (
@@ -77,10 +149,12 @@ const UserDetailsScreen = ({ navigation }) => {
               <TextInput
                 ref={inputRefs[item.key]}
                 style={styles.input}
-                value={userData[item.key]}
+                value={userBioData[item.key]}
                 onChangeText={value => handleInputChange(item.key, value)}
+                secureTextEntry={item.key === 'password'} 
               />
-              <TouchableOpacity onPress={() => inputRefs[item.key].current.focus()}>
+              <TouchableOpacity
+                onPress={() => inputRefs[item.key].current.focus()}>
                 <FontAwesome5 name="pen" size={14} color="#888" />
               </TouchableOpacity>
             </View>
@@ -90,12 +164,14 @@ const UserDetailsScreen = ({ navigation }) => {
 
       {/* Bottom Section - Next Button */}
       <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleNext}>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
       </View>
+      <AlertMessage message={alertMessage} messageType={alertType} />
+      <Modal visible={loader} transparent>
+        <Loader />
+      </Modal>
     </View>
   );
 };

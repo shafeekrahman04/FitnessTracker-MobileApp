@@ -1,18 +1,33 @@
 import React, {useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, StyleSheet, Animated} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnboardingScreen = () => {
   const navigation = useNavigation();
   const progress = useRef(new Animated.Value(0)).current;
 
+  const checkStorage = async () => {
+    const freshStatus = await AsyncStorage.getItem('isFresh');
+    const token = await AsyncStorage.getItem('token');
+    if (freshStatus == 'false') {
+      if(token){
+        navigation.replace('HomeTab');
+      }
+      else {
+        navigation.replace('Login');
+      }
+    } else {
+      navigation.replace('NameInput');
+    }
+  };
   useEffect(() => {
     Animated.timing(progress, {
       toValue: 1,
-      duration: 4000,
+      duration: 3000,
       useNativeDriver: false,
     }).start(() => {
-        navigation.replace("NameInput");
+      checkStorage();
     });
   }, []);
 

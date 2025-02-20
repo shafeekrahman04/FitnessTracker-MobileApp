@@ -1,9 +1,23 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome6';
+import {alertMessageType} from '../../utilities/enum/Enum';
+import AlertMessage from '../../shared/AlertMessage';
 
-const GenderSelectionScreen = ({navigation}) => {
+const GenderSelectionScreen = ({navigation, route}) => {
+  const {name} = route.params || {};
+
   const [selectedGender, setSelectedGender] = useState(null);
+  const [alertMessage, setAlertMessage] = useState({
+    message: '',
+    timestamp: Date.now(),
+  });
+  const [alertType, setAlertType] = useState('');
+
+  const alertMessagePopUp = (message, messageType) => {
+    setAlertMessage({message: message, timestamp: new Date()});
+    setAlertType(messageType);
+  };
 
   const handleGenderSelect = gender => {
     setSelectedGender(gender);
@@ -11,10 +25,13 @@ const GenderSelectionScreen = ({navigation}) => {
 
   const handleNext = () => {
     if (!selectedGender) {
-      Alert.alert('Input Required', 'Please select gender before proceeding.');
+      alertMessagePopUp(
+        'Please select gender before proceeding.',
+        alertMessageType.WARNING.code,
+      );
       return;
     }
-    navigation.navigate('GoalSelection');
+    navigation.navigate('GoalSelection', { userData: { name: name, gender: selectedGender } });
   };
 
   return (
@@ -76,6 +93,7 @@ const GenderSelectionScreen = ({navigation}) => {
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
       </View>
+      <AlertMessage message={alertMessage} messageType={alertType} />
     </View>
   );
 };
