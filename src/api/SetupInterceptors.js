@@ -27,7 +27,6 @@ export const SetupInterceptors = (apiClient) => {
       }
       
       const status = error.response.status;
-      console.log("Network code:", status);
 
       if (status === 401 || status === 403 || status === 500 || status === 400) {
         logout();

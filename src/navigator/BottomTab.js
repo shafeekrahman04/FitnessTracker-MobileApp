@@ -5,7 +5,7 @@ import PlanScreen from '../screens/bottom_page/PlanScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import WorkoutScreen from '../screens/bottom_page/WorkoutScreen';
 import DietScreen from '../screens/bottom_page/DietScreen';
-import { ProfileScreen } from '../screens/ProfileScreen ';
+import  ProfileScreen from '../screens/bottom_page/ProfileScreen ';
 
 export default function BottomTab() {
   const TabNav = createBottomTabNavigator();

@@ -1,20 +1,38 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome6';
+import AlertMessage from '../../shared/AlertMessage';
+import { alertMessageType } from '../../utilities/enum/Enum';
 
-const FitnessLevelScreen = ({navigation}) => {
+const levels = [1, 2, 3, 4, 5];
+const levelHeights = [40, 60, 80, 100, 120];
+const descriptionData = {
+  1: {
+    emoji: '😞',
+    text: 'I easily get out of breath while walking up the stairs',
+  },
+  2: {
+    emoji: '🐥',
+    text: 'My heartbeat really races after doing several jumping jacks',
+  },
+  3: {emoji: '💪', text: 'I exercise regularly, at least 1-2 times a week'},
+  4: {emoji: '😎', text: 'Fitness is an essential part of my life'},
+  5: {emoji: '🏅', text: 'Fitness is just a piece of cake for me'},
+};
+
+const FitnessLevelScreen = ({navigation,route}) => {
+  const {userData} = route.params || {};
+
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [alertMessage, setAlertMessage] = useState({
+    message: '',
+    timestamp: Date.now(),
+  });
+  const [alertType, setAlertType] = useState('');
 
-  const levels = [1, 2, 3, 4, 5];
-  const levelHeights = [40, 60, 80, 100, 120];
-
-  // Mapping levels to emoji and description
-  const descriptionData = {
-    1: {emoji: '😞', text: 'I easily get out of breath while walking up the stairs'},
-    2: {emoji: '🐥', text: 'My heartbeat really races after doing several jumping jacks'},
-    3: {emoji: '💪', text: 'I exercise regularly, at least 1-2 times a week'},
-    4: {emoji: '😎', text: 'Fitness is an essential part of my life'},
-    5: {emoji: '🏅', text: 'Fitness is just a piece of cake for me'},
+  const alertMessagePopUp = (message, messageType) => {
+    setAlertMessage({message: message, timestamp: new Date()});
+    setAlertType(messageType);
   };
 
   const handleLevelSelect = level => {
@@ -23,10 +41,15 @@ const FitnessLevelScreen = ({navigation}) => {
 
   const handleNext = () => {
     if (!selectedLevel) {
-      Alert.alert('Input Required', 'Please select a level before proceeding.');
+      alertMessagePopUp(
+              'Please select a level before proceeding.',
+              alertMessageType.WARNING.code,
+            );
       return;
     }
-    navigation.navigate('FocusPart');
+    
+    const updatedUserData = { ...userData, fitnessLevel: selectedLevel };
+    navigation.navigate('FocusPart', { userData: updatedUserData });
   };
 
   return (
@@ -34,7 +57,9 @@ const FitnessLevelScreen = ({navigation}) => {
       {/* Top Section - Back Button, Progress, Title & Subtitle */}
       <View style={styles.topContainer}>
         {/* Back Button */}
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}>
           <FontAwesome5 name="arrow-left" size={24} color="#FFF" />
         </TouchableOpacity>
 
@@ -76,8 +101,12 @@ const FitnessLevelScreen = ({navigation}) => {
       {/* Show Emoji & Description ONLY when a level is selected */}
       {selectedLevel && (
         <View style={styles.descriptionContainer}>
-          <Text style={styles.emoji}>{descriptionData[selectedLevel].emoji}</Text>
-          <Text style={styles.description}>{descriptionData[selectedLevel].text}</Text>
+          <Text style={styles.emoji}>
+            {descriptionData[selectedLevel].emoji}
+          </Text>
+          <Text style={styles.description}>
+            {descriptionData[selectedLevel].text}
+          </Text>
         </View>
       )}
 
@@ -92,6 +121,7 @@ const FitnessLevelScreen = ({navigation}) => {
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
       </View>
+      <AlertMessage message={alertMessage} messageType={alertType} />
     </View>
   );
 };

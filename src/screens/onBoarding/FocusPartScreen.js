@@ -1,28 +1,42 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Alert, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome6';
+import AlertMessage from '../../shared/AlertMessage';
+import { alertMessageType } from '../../utilities/enum/Enum';
 
-const FocusPartScreen = ({navigation}) => {
+const focusParts = [
+  { id: 'arm', label: 'ARM', image: require('../../assets/focus_part/arm.jpg') },
+  { id: 'chest', label: 'CHEST', image: require('../../assets/focus_part/chest.jpg') },
+  { id: 'abs', label: 'ABS', image: require('../../assets/focus_part/abs.jpg') },
+  { id: 'leg', label: 'LEG', image: require('../../assets/focus_part/leg.jpg') },
+  { id: 'fullbody', label: 'FULL BODY', image: require('../../assets/focus_part/full_body.jpg') },
+];
+const FocusPartScreen = ({navigation,route}) => {
+  const {userData} = route.params || {};
+
     const [selectedPart, setSelectedPart] = useState(null);
-
-    const focusParts = [
-      { id: 'arm', label: 'ARM', image: require('../../assets/focus_part/arm.jpg') },
-      { id: 'chest', label: 'CHEST', image: require('../../assets/focus_part/chest.jpg') },
-      { id: 'abs', label: 'ABS', image: require('../../assets/focus_part/abs.jpg') },
-      { id: 'leg', label: 'LEG', image: require('../../assets/focus_part/leg.jpg') },
-      { id: 'fullbody', label: 'FULL BODY', image: require('../../assets/focus_part/full_body.jpg') },
-    ];
+    const [alertMessage, setAlertMessage] = useState({message: '',timestamp: Date.now(),});
+    const [alertType, setAlertType] = useState('');
   
+    const alertMessagePopUp = (message, messageType) => {
+      setAlertMessage({message: message, timestamp: new Date()});
+      setAlertType(messageType);
+    };
+
     const handleSelect = (id) => {
       setSelectedPart(id);
     };
   
     const handleNext = () => {
       if (!selectedPart) {
-        Alert.alert('Please select a focus area before proceeding.');
+        alertMessagePopUp(
+          'Please select a focus area before proceeding.',
+          alertMessageType.WARNING.code,
+        );
         return;
       }
-      navigation.navigate('UserDetails', { focusPart: selectedPart });
+      const updatedUserData = { ...userData, focusPart: selectedPart };
+      navigation.navigate('UserDetails', { userData: updatedUserData });
     };
   
 
@@ -78,6 +92,8 @@ const FocusPartScreen = ({navigation}) => {
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
       </View>
+      <AlertMessage message={alertMessage} messageType={alertType} />
+
     </View>
   );
 };

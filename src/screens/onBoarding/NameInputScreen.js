@@ -6,21 +6,32 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  Alert,
 } from 'react-native';
+import AlertMessage from '../../shared/AlertMessage';
+import {alertMessageType} from '../../utilities/enum/Enum';
 
 const NameInputScreen = ({navigation}) => {
   const [name, setName] = useState('');
+  const [alertMessage, setAlertMessage] = useState({
+    message: '',
+    timestamp: Date.now(),
+  });
+  const [alertType, setAlertType] = useState('');
+  const alertMessagePopUp = (message, messageType) => {
+    setAlertMessage({message: message, timestamp: new Date()});
+    setAlertType(messageType);
+  };
 
   const handleNext = () => {
     if (!name.trim()) {
-      Alert.alert(
-        'Input Required',
+      alertMessagePopUp(
         'Please enter your name before proceeding.',
+        alertMessageType.WARNING.code,
       );
       return;
     }
-    navigation.navigate('GenderSelection');
+
+    navigation.navigate('GenderSelection',{ name: name });
   };
 
   return (
@@ -37,7 +48,11 @@ const NameInputScreen = ({navigation}) => {
       {/* Centered Input Field */}
       <View style={styles.inputWrapper}>
         <TextInput style={styles.input} value={name} onChangeText={setName} />
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+  <Text style={styles.loginText}>Already have an account?</Text>
+</TouchableOpacity>
       </View>
+
 
       {/* Next Button - Dimmed if no input */}
       <TouchableOpacity
@@ -47,9 +62,10 @@ const NameInputScreen = ({navigation}) => {
         ]}
         onPress={handleNext}
         // disabled={!name.trim()}
-        >
+      >
         <Text style={styles.buttonText}>NEXT</Text>
       </TouchableOpacity>
+      <AlertMessage message={alertMessage} messageType={alertType} />
     </View>
   );
 };
@@ -116,6 +132,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },
+  loginText: {
+    color: '#bbb',
+    fontSize: 16,
+    marginTop: 20,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+    fontFamily: 'Altivo-Bold',
+  },
+  
 });
 
 export default NameInputScreen;

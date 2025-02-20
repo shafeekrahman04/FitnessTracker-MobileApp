@@ -1,21 +1,31 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useAuth} from '../../security/AuthContext';
 
 const settingsData = [
-  { id: '1', title: 'My Profile', icon: 'emoji-emotions', color: '#FF9800' },
-  { id: '2', title: 'My Workouts', icon: 'favorite', color: '#E91E63' },
-  { id: '3', title: 'Workout Settings', icon: 'water-drop', color: '#4CAF50' },
-  { id: '4', title: 'General Settings', icon: 'settings', color: '#2196F3' },
-  { id: '5', title: 'Language Options', icon: 'language', color: '#9C27B0', subtitle: 'System default' },
+  {id: '1', title: 'My Profile', icon: 'emoji-emotions', color: '#FF9800'},
+  {id: '2', title: 'My Workouts', icon: 'favorite', color: '#E91E63'},
+  {id: '3', title: 'Workout Settings', icon: 'water-drop', color: '#4CAF50'},
+  {id: '4', title: 'General Settings', icon: 'settings', color: '#2196F3'},
+  {id: '5',title: 'Language Options',icon: 'language',color: '#9C27B0'},
 ];
 
 const extraSettings = [
-  { id: '6', title: 'Rate Us', icon: 'star', color: '#FF9800' },
-  { id: '7', title: 'Feedback', icon: 'edit', color: '#607D8B' },
+  {id: '6', title: 'Rate Us', icon: 'star', color: '#FF9800'},
+  {id: '7', title: 'Feedback', icon: 'edit', color: '#607D8B'},
+  {id: '8', title: 'Logout', icon: 'logout', color: '#f5736c'},
 ];
 
-export const ProfileScreen = () => {
+export default ProfileScreen = ({navigation}) => {
+  const authContext = useAuth();
+  const logout = () => {
+    authContext.logout();
+    setTimeout(() => {
+      navigation.navigate('Login');
+    }, 200);
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -28,13 +38,15 @@ export const ProfileScreen = () => {
         <Text style={styles.sectionTitle}>SETTINGS</Text>
         <FlatList
           data={settingsData}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
             <TouchableOpacity style={styles.settingItem}>
               <MaterialIcons name={item.icon} size={24} color={item.color} />
-              <View style={{ flex: 1 }}>
+              <View style={{flex: 1}}>
                 <Text style={styles.settingText}>{item.title}</Text>
-                {item.subtitle && <Text style={styles.subtitle}>{item.subtitle}</Text>}
+                {item.subtitle && (
+                  <Text style={styles.subtitle}>{item.subtitle}</Text>
+                )}
               </View>
             </TouchableOpacity>
           )}
@@ -45,9 +57,9 @@ export const ProfileScreen = () => {
       <View style={styles.sectionContainer}>
         <FlatList
           data={extraSettings}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.settingItem}>
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
+            <TouchableOpacity style={styles.settingItem} onPress={item.title === 'Logout' ? logout : undefined}>
               <MaterialIcons name={item.icon} size={24} color={item.color} />
               <Text style={styles.settingText}>{item.title}</Text>
             </TouchableOpacity>

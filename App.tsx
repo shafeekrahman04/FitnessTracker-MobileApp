@@ -4,8 +4,8 @@ import AuthContextProvider from './src/security/AuthContext';
 
 export default function App() {
   return (
-    // <AuthContextProvider>
+    <AuthContextProvider>
       <StackNavigation />
-    // </AuthContextProvider>
+     </AuthContextProvider>
   );
 }
