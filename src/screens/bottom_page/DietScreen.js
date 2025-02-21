@@ -1,41 +1,47 @@
-import React from 'react';
-import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, FlatList, Image, StyleSheet, Modal} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Loader from '../../shared/Loader';
+import {getMealItemData} from '../../api/MealItemService';
 
-const mealData = [
-  {
-    id: '1',
-    name: 'Cabbage Salad with Peanuts',
-    image: require('../../assets/focus_part/abs.jpg'),
-  },
-  {
-    id: '2',
-    name: 'Garlicky Pasta with Swiss Chard and Beans',
-    image: require('../../assets/focus_part/abs.jpg'),
-  },
-  {
-    id: '3',
-    name: 'White Bean and Potato Tacos (Gluten Free and Vegan)',
-    image: require('../../assets/focus_part/abs.jpg'),
-  },
-  {
-    id: '4',
-    name: 'Roasted Cauliflower Salad with Spicy Dressing',
-    image: require('../../assets/focus_part/abs.jpg'),
-  },
-  {
-    id: '5',
-    name: 'Quinoa Tabbouleh Salad with Parsley and Mint (Gluten-Free, Vegan)',
-    image: require('../../assets/focus_part/abs.jpg'),
-  },
+const foodImages = [
+  require('../../assets/diet_food/deitFood.jpg'),
+  require('../../assets/diet_food/dietFood2.jpg'),
+  require('../../assets/diet_food/dietFood3.jpg'),
+  require('../../assets/diet_food/dietFood4.jpg'),
+  require('../../assets/diet_food/dietFood5.jpg'),
+  require('../../assets/diet_food/dietFood6.jpg'),
+  require('../../assets/diet_food/dietFood7.jpg'),
+  require('../../assets/diet_food/dietFood8.jpg'),
+  require('../../assets/diet_food/dietFood9.jpg'),
+  require('../../assets/diet_food/dietFood10.jpg'),
 ];
 
 const DietScreen = ({navigation}) => {
+  const [loader, setLoader] = useState(false);
+  const [mealData, setMealData] = useState([]);
+
+  const getMealData = async () => {
+    setLoader(true);
+    try {
+      const res = await getMealItemData();
+      const data = res.data;
+      setMealData(data.data);
+    } catch (error) {
+      console.error('Failed to fetch data details:', error);
+    }
+    setLoader(false);
+  };
+
+  useEffect(() => {
+    getMealData();
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* Header with Search Bar */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>DEIT</Text>
+        <Text style={styles.headerTitle}>DIET FOODS</Text>
         <View style={styles.headerIcons}>
           <Ionicons name="search" size={24} color="white" />
           <Ionicons
@@ -47,17 +53,36 @@ const DietScreen = ({navigation}) => {
         </View>
       </View>
 
-      {/* Meal List */}
-      <FlatList
-        data={mealData}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <View style={styles.listItem}>
-            <Image source={item.image} style={styles.itemImage} />
-            <Text style={styles.itemText}>{item.name}</Text>
-          </View>
-        )}
-      />
+      <View style={styles.cardContainer}>
+        <FlatList
+          data={mealData}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => (
+            <View style={styles.listItem}>
+              <Image
+                source={
+                  foodImages[Math.floor(Math.random() * foodImages.length)]
+                }
+                style={styles.itemImage}
+              />
+              <View style={styles.itemDetails}>
+                <Text style={styles.itemText}>{item.name}</Text>
+                <Text style={styles.itemSubText}>
+                  Calories: {item.calories} kcal
+                </Text>
+                <Text style={styles.itemSubText}>
+                  Protein: {item.protein}g | Carbs: {item.carbs}g | Fats:{' '}
+                  {item.fats}g
+                </Text>
+              </View>
+            </View>
+          )}
+        />
+      </View>
+
+      <Modal visible={loader} transparent>
+        <Loader />
+      </Modal>
     </View>
   );
 };
@@ -75,8 +100,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
   },
-  headerTitle: {color: 'white', fontSize: 20, fontWeight: 'bold'},
-  headerIcons: {flexDirection: 'row'},
+  headerTitle: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+  },
+  cardContainer: {
+    marginTop: 15,
+  },
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -92,9 +126,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 10,
   },
+  itemDetails: {
+    flex: 1,
+  },
   itemText: {
     color: 'white',
-    fontSize: 16,
-    flexShrink: 1, // Prevents text overflow
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  itemSubText: {
+    color: 'lightgray',
+    fontSize: 14,
   },
 });
