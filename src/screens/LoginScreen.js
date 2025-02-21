@@ -7,13 +7,14 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import  {Colors} from '../utilities/styles/GlobalStyles';
+import {Colors} from '../utilities/styles/GlobalStyles';
 import {TextInput} from 'react-native-gesture-handler';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import AlertMessage from '../shared/AlertMessage';
 import Loader from '../shared/Loader';
 import {alertMessageType} from '../utilities/enum/Enum';
-import { useAuth } from '../security/AuthContext';
+import {useAuth} from '../security/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({navigation}) {
   const authContext = useAuth();
@@ -32,7 +33,7 @@ export default function LoginScreen({navigation}) {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  
+
   const alertMessagePopUp = (message, messageType) => {
     setAlertMessage({message: message, timestamp: new Date()});
     setAlertType(messageType);
@@ -54,16 +55,25 @@ export default function LoginScreen({navigation}) {
   async function login() {
     if (loginValidation()) {
       setLoader(true);
+      const started = await AsyncStorage.getItem('userStarted');
       const loginSuccess = await authContext.login(username, password);
       setLoader(false);
       if (loginSuccess) {
         alertMessagePopUp('Login successful', alertMessageType.SUCCESS.code);
-
-        setTimeout(() => {
-          navigation.replace('HomeTab');
-        }, 500);
+        if (started == 'true') {
+          setTimeout(() => {
+            navigation.replace('HomeTab');
+          }, 500);
+        } else {
+          setTimeout(() => {
+            navigation.replace('GetStarted');
+          }, 500);
+        }
       } else {
-        alertMessagePopUp("Incorrext username or password", alertMessageType.DANGER.code);
+        alertMessagePopUp(
+          'Incorrext username or password',
+          alertMessageType.DANGER.code,
+        );
       }
     }
   }
@@ -75,10 +85,7 @@ export default function LoginScreen({navigation}) {
   return (
     <>
       <View style={styles.body}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.image}
-        />
+        <Image source={require('../assets/logo.png')} style={styles.image} />
 
         <View style={styles.header}>
           <Text style={styles.title}>Login</Text>
@@ -89,7 +96,7 @@ export default function LoginScreen({navigation}) {
           <TextInput
             style={styles.input}
             placeholder="username"
-            placeholderTextColor="#fff" 
+            placeholderTextColor="#fff"
             value={username}
             onChangeText={v => {
               setUsername(v);
@@ -101,7 +108,7 @@ export default function LoginScreen({navigation}) {
               style={styles.input}
               secureTextEntry={showPassword}
               placeholder="Password"
-              placeholderTextColor="#fff" 
+              placeholderTextColor="#fff"
               value={password}
               onChangeText={v => {
                 setPassword(v);
@@ -212,7 +219,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
     marginBottom: 10,
-    color: '#fff', 
+    color: '#fff',
   },
   passwordContainer: {
     flexDirection: 'row',

@@ -15,6 +15,9 @@ import FocusPartScreen from '../screens/onBoarding/FocusPartScreen';
 import UserDetailsScreen from '../screens/onBoarding/UserDetailsScreen';
 import GeneratePlanScreen from '../screens/onBoarding/GeneratePlanScreen';
 import ExerciseScreen from '../screens/ExerciseScreen';
+import PlanScreen from '../screens/PlanScreen';
+import PlanDetailScreen from '../screens/PlanDetailScreen';
+import GetStartedScreen from '../screens/GetStartedScreen';
 
 const Stack = createStackNavigator();
 
@@ -108,6 +111,27 @@ export default function StackNavigation() {
         <Stack.Screen
           name="HomeTab"
           component={BottomTab}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Plan"
+          component={PlanScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="PlanDetail"
+          component={PlanDetailScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="GetStarted"
+          component={GetStartedScreen}
           options={{
             headerShown: false,
           }}

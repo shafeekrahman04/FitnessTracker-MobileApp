@@ -10,9 +10,14 @@ const OnboardingScreen = () => {
   const checkStorage = async () => {
     const freshStatus = await AsyncStorage.getItem('isFresh');
     const token = await AsyncStorage.getItem('token');
+    const started = await AsyncStorage.getItem('userStarted');
     if (freshStatus == 'false') {
       if(token){
+        if(started == 'true') {
         navigation.replace('HomeTab');
+        } else {
+          navigation.replace('GetStarted');
+        }
       }
       else {
         navigation.replace('Login');

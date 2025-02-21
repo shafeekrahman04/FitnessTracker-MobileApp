@@ -77,7 +77,8 @@ const WorkoutScreen = ({navigation}) => {
                 style={styles.card}
                 onPress={() =>
                   navigation.navigate('ExerciseScreen', {
-                    exercises: selectedExercises, title: item.title
+                    exercises: selectedExercises,
+                    title: item.title,
                   })
                 }>
                 <ImageBackground

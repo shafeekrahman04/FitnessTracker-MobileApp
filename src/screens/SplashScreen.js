@@ -21,7 +21,6 @@ export default function SplashScreen({navigation}) {
     } catch (e) {
       setIsloader(false);
       // alterMessagePopUp('Something is wrong', alertMessageType.DANGER.code);
-      console.log(e);
     }
   };
 
