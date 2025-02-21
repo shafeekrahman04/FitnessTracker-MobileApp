@@ -1,11 +1,11 @@
 import {StyleSheet} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import PlanScreen from '../screens/bottom_page/PlanScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import WorkoutScreen from '../screens/bottom_page/WorkoutScreen';
 import DietScreen from '../screens/bottom_page/DietScreen';
 import  ProfileScreen from '../screens/bottom_page/ProfileScreen ';
+import HomeScreen from '../screens/bottom_page/HomeScreen';
 
 export default function BottomTab() {
   const TabNav = createBottomTabNavigator();
@@ -27,8 +27,8 @@ export default function BottomTab() {
         },
       }}>
       <TabNav.Screen
-        name="Plan"
-        component={PlanScreen}
+        name="Home"
+        component={HomeScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
